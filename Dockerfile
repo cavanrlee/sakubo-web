@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:8.2-apache
 
 # Mag-install ng mga kinakailangang extensions para sa Laravel at Database (MySQL/PostgreSQL)
 RUN apt-get update && apt-get install -y \
