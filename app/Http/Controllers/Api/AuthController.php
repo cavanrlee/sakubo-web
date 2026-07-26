@@ -57,7 +57,6 @@ class AuthController extends Controller
             return response()->json([
                 'success'       => true,
                 'message'       => 'Login successful.',
-                'auth_token'    => $sessionToken,
                 'data' => [
                     'user'                      => Auth::user(),
                     'menu'                      => Menu::get(),
