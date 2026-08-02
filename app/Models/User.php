@@ -18,5 +18,11 @@ class User extends Authenticatable
         'password', 
         'api_token',
     ];
+
+
+    public function BusinessDetails()
+    {
+        return $this->hasMany(BusinessDetails::class, 'user_id');
+    }
 }
 

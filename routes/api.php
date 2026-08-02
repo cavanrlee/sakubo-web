@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BusinessAccountController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\SMSController;
 use Illuminate\Support\Facades\Artisan;
@@ -40,6 +41,14 @@ Route::middleware(['web', 'api.key'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         
         Route::get('/dashboard', [AuthController::class, 'dashboard']);
+
+        Route::prefix('business-accounts')->group(function () {
+            Route::get('/', [BusinessAccountController::class, 'index']);                
+            Route::post('/', [BusinessAccountController::class, 'store']);                
+            Route::get('/{id}', [BusinessAccountController::class, 'show']);              
+            Route::match(['put', 'patch'], '/{id}', [BusinessAccountController::class, 'update']); 
+            Route::delete('/{id}', [BusinessAccountController::class, 'destroy']);      
+        });
     });
 
 });
