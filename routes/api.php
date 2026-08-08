@@ -25,6 +25,15 @@ Route::get('/optimize-me', function() {
     return "Optimization Complete!";
 });
 
+
+Route::fallback(function () {
+    return response()->json([
+        'success' => false,
+        'message' => 'Unauthorized',
+    ], 401);
+});
+
+
 Route::middleware(['web', 'api.key'])->group(function () {
 
     // PUBLIC ROUTES
@@ -54,10 +63,4 @@ Route::middleware(['web', 'api.key'])->group(function () {
 });
 
 
-Route::fallback(function () {
-    return response()->json([
-        'success' => false,
-        'message' => 'Unauthorized',
-    ], 401);
-});
 
