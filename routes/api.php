@@ -37,7 +37,7 @@ Route::fallback(function () {
 Route::middleware(['web', 'api.key'])->group(function () {
 
     // PUBLIC ROUTES
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->name('login');;
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/send-otp', [SMSController::class, 'sendOTP']);
     Route::post('/otp-validation', [SMSController::class, 'OTPValidation']);
