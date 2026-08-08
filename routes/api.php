@@ -25,7 +25,7 @@ Route::get('/optimize-me', function() {
     return "Optimization Complete!";
 });
 
-Route::middleware(['web', 'api.key'])->group(function () {
+Route::middleware(['api.key'])->group(function () {
 
     // PUBLIC ROUTES
     Route::post('/login', [AuthController::class, 'login']);
