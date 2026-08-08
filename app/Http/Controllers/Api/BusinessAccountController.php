@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BusinessRegisterRequest;
 use App\Models\BusinessDetails;
 use App\Models\BusinessDocuments;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,13 +14,12 @@ use Illuminate\Support\Str;
 class BusinessAccountController extends Controller
 {
 
-    // create
-    public function create(BusinessRegisterRequest $request)
+    // store
+    public function store(BusinessRegisterRequest $request)
     {
-
         $businessId 
         = BusinessDetails::insertGetId([
-            'user_cd'                   => Auth::id(),
+            'user_id'                   => Auth::id(),
             'business_cd'               => Str::uuid(),
 
             'mobileno'                  => $request->business_contact_number,
@@ -28,24 +28,14 @@ class BusinessAccountController extends Controller
             'business_category'         => $request->business_category,
             'business_industry'         => $request->additional_product,
             'business_contact_no'       => $request->business_contact_number,
+            'business_email'            => $request->business_email,
 
-            'business_services' => [
-                'delivery'              => $request->delivery,
-                'meetup'                => $request->meetup,
-                'pickup'                => $request->pickup,
-            ],
+            'business_services'         => json_encode($request->business_services),
+            'payments_accepted'         => json_encode($request->payments_accepted),
+            'days_open'                 => json_encode($request->days_of_operation),
 
-            'payments_accepted' => [
-                'cash'                  => $request->cash,
-                'gcash'                 => $request->gcash,
-                'paymaya'               => $request->paymaya,
-                'utang'                 => $request->utang_ok,
-            ],
-
-            'days_open'                 => range(1, (int)$request->days_of_operation),
-
-            'open_time'                 => $request->from_time,
-            'close_time'                => $request->to_time,
+            'open_time'                 => $request->open_time,
+            'close_time'                => $request->close_time,
 
             'barangay_id'               => $request->barangay_id,
             'municipality_id'           => $request->municipality_id,
@@ -73,7 +63,6 @@ class BusinessAccountController extends Controller
         DB::connection('pgsql')->table('business_documents')
         ->insert([
             'business_id'               => $businessId,
-            'business_cd'               => BusinessDetails::find($businessId)->business_cd,
             'business_permit'           => $request->business_permit,
             'bir_certificate'           => $request->bir_certificate_of_registration,
             'dti_registration'          => $request->dti_registration,
@@ -103,11 +92,9 @@ class BusinessAccountController extends Controller
             'business_contact_no'       => $request->business_contact_number,
             'business_email'            => $request->business_email,
 
-            'business_services'         => $request->business_services,
-            'payments_accepted'         => $request->payments_accepted,
-
-            // Ligtas na pagsusuri kung may laman ang days_of_operation bago i-range
-            'days_open'                 => $request->days_of_operation,
+            'business_services'         => json_encode($request->business_services),
+            'payments_accepted'         => json_encode($request->payments_accepted),
+            'days_open'                 => json_encode($request->days_of_operation),
 
             'open_time'                 => $request->open_time,
             'close_time'                => $request->close_time,
@@ -136,7 +123,7 @@ class BusinessAccountController extends Controller
 
         // Insert uploaded document names/paths
         BusinessDocuments
-        ::where('business_id', (int) $request->route('id'))
+        ::where('business_id', $request->route('id'))
         ->update([
             'business_permit'           => $request->business_permit,
             'bir_certificate'           => $request->bir_certificate_of_registration,
@@ -148,6 +135,27 @@ class BusinessAccountController extends Controller
         return response()->json([
             'success'                   => true,
             'message'                   => 'Business successfully updated.'
+        ]);
+    }
+
+
+    // delete
+    public function destroy(Request $request)
+    {
+
+        BusinessDetails
+        ::where('id', $request->route('id'))
+        ->where('user_id', Auth::id())
+        ->delete();
+
+        BusinessDocuments
+        ::where('business_id', $request->route('id'))
+        ->delete();
+
+
+        return response()->json([
+            'success'                   => true,
+            'message'                   => 'Business successfully deleted.'
         ]);
     }
 

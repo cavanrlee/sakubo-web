@@ -32,4 +32,5 @@ class BusinessDetails extends Model
     {
         return $this->belongsTo(Province::class, 'province_id', 'province_id');
     }
+
 }

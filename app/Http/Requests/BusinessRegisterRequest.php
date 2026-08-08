@@ -16,13 +16,12 @@ class BusinessRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-
-            // ===== BUSINESS (ONLY IF BUSINESS ACCOUNT) =====
+            // ===== BUSINESS INFO =====
             'business_name'         => 'required|string|max:255',
             'business_category'     => 'required|string|max:255',
             'business_type'         => 'required|string|max:255',
 
-            'business_email'        => 'nullable|email|unique:business_details,email',
+            'business_email'        => 'nullable|email|unique:business_details,business_email',
             'business_website'      => 'nullable|string|max:255',
             'business_address'      => 'required|string|max:255',
 
@@ -31,29 +30,28 @@ class BusinessRegisterRequest extends FormRequest
             'municipality_id'       => 'required|exists:table_municipality,municipality_id',
             'barangay_id'           => 'required|exists:table_barangay,barangay_id',
 
-
             // ===== OPERATING HOURS =====
             'days_of_operation'     => 'required|array',
             'open_time'             => 'required|date_format:H:i',
             'close_time'            => 'required|date_format:H:i|after:open_time',
 
-
             'business_notes'        => 'nullable|string',
 
+            // ===== PAYMENT METHODS & SERVICES =====
+            'cash'                  => 'nullable|boolean',
+            'gcash'                 => 'nullable|boolean',
+            'paymaya'               => 'nullable|boolean',
+            'utang_ok'              => 'nullable|boolean',
 
-            // ===== PAYMENT METHODS =====
-            'business_services'     => 'array',
-
-            // ===== SERVICE OPTIONS =====
-            'pawyment_accepted'     => 'array',
-
+            'delivery'              => 'nullable|boolean',
+            'meetup'                => 'nullable|boolean',
+            'pickup'                => 'nullable|boolean',
 
             // ===== SOCIAL MEDIA =====
-            'tiktok'                => 'nullable|string|max:255',
-            'facebook'              => 'nullable|string|max:255',
-            'instagram'             => 'nullable|string|max:255',
-            'website'               => 'nullable|url|max:255',
-
+            'tiktok_link'           => 'nullable|string|max:255',
+            'facebook_link'         => 'nullable|string|max:255',
+            'instagram_link'        => 'nullable|string|max:255',
+            'website_link'          => 'nullable|string|max:255',
 
             // ===== FILES =====
             'business_permit'                 => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -63,11 +61,10 @@ class BusinessRegisterRequest extends FormRequest
             'sec_registration'                => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'sanitary_registration'           => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
-
             // ===== PRODUCTS =====
-            'products'                        => 'required|array',
-            'products.*'                      => 'string|max:255',
-            'additional_product'              => 'nullable|string|max:255',
+            'products'              => 'required|array',
+            'products.*'            => 'string|max:255',
+            'additional_product'    => 'nullable|string|max:255',
         ];
     }
 
@@ -105,42 +102,34 @@ class BusinessRegisterRequest extends FormRequest
             'barangay_id.required'          => 'Barangay is required.',
             'barangay_id.exists'            => 'Selected barangay is invalid.',
 
-
             // ===== OPERATING HOURS =====
-            'days_of_operation.required'        => 'Days of operation is required.',
-            'days_of_operation.array'           => 'Days of operation is not a array',
+            'days_of_operation.required'    => 'Days of operation is required.',
+            'days_of_operation.array'       => 'Days of operation must be an array.',
 
-            'open_time.required'                => 'Open time is required.',
-            'open_time.date_format'             => 'Open time must be in HH:MM format.',
+            'open_time.required'            => 'Open time is required.',
+            'open_time.date_format'         => 'Open time must be in HH:MM format.',
 
-            'close_time.required'               => 'Close time is required.',
-            'close_time.date_format'            => 'Close time must be in HH:MM format.',
-            'close_time.after'                  => 'Close time must be after from time.',
+            'close_time.required'           => 'Close time is required.',
+            'close_time.date_format'        => 'Close time must be in HH:MM format.',
+            'close_time.after'              => 'Close time must be after open time.',
 
+            'business_notes.string'         => 'Business notes must be a valid string.',
 
-            'business_notes.string' => 'Business notes must be a valid string.',
+            // ===== PAYMENT METHODS & SERVICES =====
+            'cash.boolean'                  => 'Cash must be true or false.',
+            'gcash.boolean'                 => 'Gcash must be true or false.',
+            'paymaya.boolean'               => 'Paymaya must be true or false.',
+            'utang_ok.boolean'              => 'Utang_ok must be true or false.',
 
-
-            // ===== PAYMENT METHODS =====
-            'cash.boolean'          => 'Cash must be true or false.',
-            'gcash.boolean'         => 'Gcash must be true or false.',
-            'paymaya.boolean'       => 'Paymaya must be true or false.',
-            'utang_ok.boolean'      => 'Utang_ok must be true or false.',
-
-
-            // ===== SERVICE OPTIONS =====
-            'delivery.boolean'      => 'Delivery must be true or false.',
-            'meetup.boolean'        => 'Meetup must be true or false.',
-            'pickup.boolean'        => 'Pickup must be true or false.',
-
+            'delivery.boolean'              => 'Delivery must be true or false.',
+            'meetup.boolean'                => 'Meetup must be true or false.',
+            'pickup.boolean'                => 'Pickup must be true or false.',
 
             // ===== SOCIAL MEDIA =====
-            'tiktok.max'            => 'Tiktok is too long.',
-            'facebook.max'          => 'Facebook is too long.',
-            'instagram.max'         => 'Instagram is too long.',
-            'website.url'           => 'Website must be a valid URL.',
-            'website.max'           => 'Website is too long.',
-
+            'tiktok_link.max'               => 'Tiktok link is too long.',
+            'facebook_link.max'             => 'Facebook link is too long.',
+            'instagram_link.max'            => 'Instagram link is too long.',
+            'website_link.max'              => 'Website link is too long.',
 
             // ===== FILES =====
             'business_permit.required'      => 'Business permit is required.',
@@ -164,12 +153,9 @@ class BusinessRegisterRequest extends FormRequest
             'sanitary_registration.mimes'   => 'Sanitary registration must be jpg, jpeg, png, or pdf.',
             'sanitary_registration.max'     => 'Sanitary registration file is too large.',
 
-
             // ===== PRODUCTS =====
             'products.required'             => 'Products are required.',
             'products.array'                => 'Products must be an array.',
-            'products.min'                  => 'At least one product is required.',
-
             'products.*.string'             => 'Each product must be a valid string.',
             'products.*.max'                => 'Product name is too long.',
 

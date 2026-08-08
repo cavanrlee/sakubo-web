@@ -44,10 +44,10 @@ Route::middleware(['web', 'api.key'])->group(function () {
 
         Route::prefix('business-accounts')->group(function () {
             Route::get('/', [BusinessAccountController::class, 'index']);                
-            Route::post('/', [BusinessAccountController::class, 'store']);                
-            Route::get('/{id}', [BusinessAccountController::class, 'show']);              
-            Route::match(['put', 'patch'], '/{id}', [BusinessAccountController::class, 'update']); 
-            Route::delete('/{id}', [BusinessAccountController::class, 'destroy']);      
+            Route::post('create', [BusinessAccountController::class, 'store']);                
+            Route::get('/edit/{id}', [BusinessAccountController::class, 'show']);              
+            Route::match(['put', 'patch'], 'update/{id}', [BusinessAccountController::class, 'update']); 
+            Route::delete('delete/{id}', [BusinessAccountController::class, 'destroy']);      
         });
     });
 
