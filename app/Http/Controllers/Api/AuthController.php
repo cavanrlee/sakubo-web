@@ -8,7 +8,6 @@ use App\Http\Requests\LoginRequest;
 use App\Models\BotNavMenu;
 use App\Models\Menu;
 use App\Models\User;
-use App\Services\BusinessServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +22,9 @@ class AuthController extends Controller
             'success'       => true,
             'message'       => 'Login successful.',
             'data' => [
-                'user'                      => Auth::user(),
+                'user'                      => User::with(['BusinessDetails.barangay', 'BusinessDetails.municipality', 'BusinessDetails.province'])->find(Auth::id()),
                 'menu'                      => Menu::get(),
-                'bot_nav_items'             => BotNavMenu::get(),
-                'business_accnt_details'    => BusinessServices::Business()
+                'bot_nav_menu'              => BotNavMenu::get(),
             ]
         ], 200);
     }
@@ -58,10 +56,9 @@ class AuthController extends Controller
                 'success'       => true,
                 'message'       => 'Login successful.',
                 'data' => [
-                    'user'                      => Auth::user(),
+                    'user'                      => User::with(['BusinessDetails.barangay', 'BusinessDetails.municipality', 'BusinessDetails.province'])->find(Auth::id()),
                     'menu'                      => Menu::get(),
-                    'bot_nav_items'             => BotNavMenu::get(),
-                    'business_accnt_details'    => BusinessServices::Business()
+                    'bot_nav_menu'              => BotNavMenu::get(),
                 ]
             ], 200);
         }
