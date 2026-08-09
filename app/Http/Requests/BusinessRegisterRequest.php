@@ -62,7 +62,7 @@ class BusinessRegisterRequest extends FormRequest
 
             // ===== FILES =====
             'business_permit'                   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'store_front_photo'                 => 'required|image|mimes:jpg,jpeg,png|accepted|max:2048',
+            'store_front_photo'                 => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'bir_certificate_of_registration'   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'dti_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'sec_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
