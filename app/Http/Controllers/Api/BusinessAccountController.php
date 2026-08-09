@@ -58,10 +58,10 @@ class BusinessAccountController extends Controller
         ->insert([
             'business_id'               => $businessId,
             'business_permit'           => $request->business_permit,
-            'bir_certificate'           => $request->bir_certificate_of_registration,
-            'dti_registration'          => $request->dti_registration,
-            'sec_registration'          => $request->sec_registration,
-            'sanitary_permit'           => $request->sanitary_registration,
+            'bir_certificate_of_registration'   => $request->bir_certificate_of_registration,
+            'dti_registration'                  => $request->dti_registration,
+            'sec_registration'                  => $request->sec_registration,
+            'sanitary_registration'             => $request->sanitary_registration,
         ]);
 
         return response()->json([
@@ -113,11 +113,11 @@ class BusinessAccountController extends Controller
         BusinessDocuments
         ::where('business_id', $request->route('id'))
         ->update([
-            'business_permit'           => $request->business_permit,
-            'bir_certificate'           => $request->bir_certificate_of_registration,
-            'dti_registration'          => $request->dti_registration,
-            'sec_registration'          => $request->sec_registration,
-            'sanitary_permit'           => $request->sanitary_registration,
+            'business_permit'                   => $request->business_permit,
+            'bir_certificate_of_registration'   => $request->bir_certificate_of_registration,
+            'dti_registration'                  => $request->dti_registration,
+            'sec_registration'                  => $request->sec_registration,
+            'sanitary_registration'             => $request->sanitary_registration,
         ]);
 
         return response()->json([
