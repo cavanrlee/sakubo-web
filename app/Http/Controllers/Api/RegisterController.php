@@ -8,7 +8,6 @@ use App\Models\Region;
 use App\Models\User;
 // use App\Models\BusinessDetail;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
