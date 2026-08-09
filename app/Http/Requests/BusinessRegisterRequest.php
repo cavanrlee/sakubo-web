@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class BusinessRegisterRequest extends FormRequest
 {
@@ -15,6 +16,8 @@ class BusinessRegisterRequest extends FormRequest
 
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('PUT');
+
         return [
             // ===== BUSINESS INFO =====
             'business_name'                     => 'required|string|max:255',
@@ -61,12 +64,48 @@ class BusinessRegisterRequest extends FormRequest
             'website_link'                      => 'nullable|string|max:255',
 
             // ===== FILES =====
-            'business_permit'                   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'store_front_photo'                 => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'bir_certificate_of_registration'   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'dti_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'sec_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'sanitary_registration'             => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'business_permit' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:2048',
+            ],
+
+            'store_front_photo' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
+
+            'bir_certificate_of_registration' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:2048',
+            ],
+
+            'dti_registration' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:2048',
+            ],
+
+            'sec_registration' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:2048',
+            ],
+
+            'sanitary_registration' => [
+                Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:2048',
+            ],
+
 
             // ===== PRODUCTS =====
             'products'                          => 'required|array',
