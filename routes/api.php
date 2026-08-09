@@ -7,60 +7,149 @@ use App\Http\Controllers\Api\SMSController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| Here is where you can register API routes for your application.
 |
 */
 
-Route::get('/optimize-me', function() {
-    Artisan::call('config:cache'); // Merges all config files into one
-    Artisan::call('route:cache');  // Compiles all routes into a fast-loading array
-    Artisan::call('view:cache');   // Pre-compiles all Blade templates
+
+/*
+|--------------------------------------------------------------------------
+| Optimization
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/optimize-me', function () {
+
+    Artisan::call('config:cache');
+    Artisan::call('route:cache');
+    Artisan::call('view:cache');
+
     return "Optimization Complete!";
 });
 
 
-Route::fallback(function () {
-    return response()->json([
-        'success' => false,
-        'message' => 'Unauthorized',
-    ], 401);
-});
+/*
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['api.key'])->group(function () {
+
+    Route::post('/login', [
+        AuthController::class,
+        'login'
+    ])->name('login');
+
+    Route::post('/register', [
+        RegisterController::class,
+        'register'
+    ]);
+
+    Route::post('/send-otp', [
+        SMSController::class,
+        'sendOTP'
+    ]);
+
+    Route::post('/otp-validation', [
+        SMSController::class,
+        'OTPValidation'
+    ]);
+
+    Route::get('/address-maintenance', [
+        RegisterController::class,
+        'getAddressMaintenance'
+    ]);
 
 
-Route::middleware(['web', 'api.key'])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | PROTECTED ROUTES
+    |--------------------------------------------------------------------------
+    */
 
-    // PUBLIC ROUTES
-    Route::post('/login', [AuthController::class, 'login'])->name('login');;
-    Route::post('/register', [RegisterController::class, 'register']);
-    Route::post('/send-otp', [SMSController::class, 'sendOTP']);
-    Route::post('/otp-validation', [SMSController::class, 'OTPValidation']);
-    Route::get('/address-maintenance', [RegisterController::class, 'getAddressMaintenance']);
-
-
-    // PROTECTED ROUTES
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/change-password', [AuthController::class, 'changePassword']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-        
-        Route::get('/dashboard', [AuthController::class, 'dashboard']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Authentication
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/dashboard', [
+            AuthController::class,
+            'dashboard'
+        ]);
+
+        Route::post('/change-password', [
+            AuthController::class,
+            'changePassword'
+        ]);
+
+        Route::post('/logout', [
+            AuthController::class,
+            'logout'
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Business Accounts
+        |--------------------------------------------------------------------------
+        */
 
         Route::prefix('business-accounts')->group(function () {
-            Route::get('/', [BusinessAccountController::class, 'index']);                
-            Route::post('create', [BusinessAccountController::class, 'store']);                
-            Route::get('/edit/{id}', [BusinessAccountController::class, 'show']);              
-            Route::match(['put', 'patch'], 'update/{id}', [BusinessAccountController::class, 'update']); 
-            Route::delete('delete/{id}', [BusinessAccountController::class, 'destroy']);      
+
+            Route::get('/', [
+                BusinessAccountController::class,
+                'index'
+            ]);
+
+            Route::post('/create', [
+                BusinessAccountController::class,
+                'store'
+            ]);
+
+            Route::get('/edit/{id}', [
+                BusinessAccountController::class,
+                'show'
+            ]);
+
+            Route::match(['put', 'patch'], '/update/{id}', [
+                BusinessAccountController::class,
+                'update'
+            ]);
+
+            Route::delete('/delete/{id}', [
+                BusinessAccountController::class,
+                'destroy'
+            ]);
         });
     });
-
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| FALLBACK
+|--------------------------------------------------------------------------
+|
+| This only handles routes that do not exist.
+|
+*/
+
+Route::fallback(function () {
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Route not found.',
+    ], 404);
+
+});
 
