@@ -42,12 +42,6 @@ class BusinessAccountController extends Controller
             'province_id'               => $request->province_id,
             'region_id'                 => $request->region_id,
 
-            'business_loc_region'       => $request->region_id,
-            'business_loc_barangay'     => $request->barangay_id,
-            'business_loc_municipality' => $request->municipality_id,
-            'business_loc_province'     => $request->province_id,
-            'business_loc_zip_code'     => null,
-
             'facebook_account_link'     => $request->facebook_link,
             'tiktok_account_link'       => $request->tiktok_link,
             'instagram_account_link'    => $request->instagram_link,
@@ -94,7 +88,7 @@ class BusinessAccountController extends Controller
 
             'business_services'         => json_encode($request->business_services),
             'payments_accepted'         => json_encode($request->payments_accepted),
-            'days_open'                 => json_encode($request->days_of_operation),
+            'days_open'                 => json_encode($request->days_open),
 
             'open_time'                 => $request->open_time,
             'close_time'                => $request->close_time,
@@ -103,12 +97,6 @@ class BusinessAccountController extends Controller
             'municipality_id'           => $request->municipality_id,
             'province_id'               => $request->province_id,
             'region_id'                 => $request->region_id,
-
-            'business_loc_region'       => $request->region_id,
-            'business_loc_barangay'     => $request->barangay_id,
-            'business_loc_municipality' => $request->municipality_id,
-            'business_loc_province'     => $request->province_id,
-            'business_loc_zip_code'     => null,
 
             'facebook_account_link'     => $request->facebook_link,
             'tiktok_account_link'       => $request->tiktok_link,

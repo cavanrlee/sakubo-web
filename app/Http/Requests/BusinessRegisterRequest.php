@@ -17,54 +17,61 @@ class BusinessRegisterRequest extends FormRequest
     {
         return [
             // ===== BUSINESS INFO =====
-            'business_name'         => 'required|string|max:255',
-            'business_category'     => 'required|string|max:255',
-            'business_type'         => 'required|string|max:255',
+            'business_name'                     => 'required|string|max:255',
+            'business_category'                 => 'required|string|max:255',
+            'business_type'                     => 'required|string|max:255',
 
-            'business_email'        => 'nullable|email|unique:business_details,business_email',
-            'business_website'      => 'nullable|string|max:255',
-            'business_address'      => 'required|string|max:255',
+            'business_email'                    => 'nullable|email|unique:business_details,business_email',
+            'business_website'                  => 'nullable|string|max:255',
+            'business_address'                  => 'required|string|max:255',
 
-            'region_id'             => 'required|exists:table_region,region_id',
-            'province_id'           => 'required|exists:table_province,province_id',
-            'municipality_id'       => 'required|exists:table_municipality,municipality_id',
-            'barangay_id'           => 'required|exists:table_barangay,barangay_id',
+            'region_id'                         => 'required|exists:table_region,region_id',
+            'province_id'                       => 'required|exists:table_province,province_id',
+            'municipality_id'                   => 'required|exists:table_municipality,municipality_id',
+            'barangay_id'                       => 'required|exists:table_barangay,barangay_id',
 
             // ===== OPERATING HOURS =====
-            'days_of_operation'     => 'required|array',
-            'open_time'             => 'required|date_format:H:i',
-            'close_time'            => 'required|date_format:H:i|after:open_time',
+            'days_open'                         => 'required|array',
+            'open_time'                         => 'required|date_format:H:i',
+            'close_time'                        => 'required|date_format:H:i|after:open_time',
 
-            'business_notes'        => 'nullable|string',
+            'business_notes'                    => 'nullable|string',
 
             // ===== PAYMENT METHODS & SERVICES =====
-            'cash'                  => 'nullable|boolean',
-            'gcash'                 => 'nullable|boolean',
-            'paymaya'               => 'nullable|boolean',
-            'utang_ok'              => 'nullable|boolean',
+            'business_services'                 => 'required|array',
+            'business_services.*'               => 'string|max:255',
+            'payments_accepted'                 => 'required|array',
+            'payments_accepted.*'               => 'string|max:255',
+            'days_open'                         => 'required|array',
+            'days_open.*'                       => 'string|max:255',
 
-            'delivery'              => 'nullable|boolean',
-            'meetup'                => 'nullable|boolean',
-            'pickup'                => 'nullable|boolean',
+            'cash'                              => 'nullable|boolean',
+            'gcash'                             => 'nullable|boolean',
+            'paymaya'                           => 'nullable|boolean',
+            'utang_ok'                          => 'nullable|boolean',
+
+            'delivery'                          => 'nullable|boolean',
+            'meetup'                            => 'nullable|boolean',
+            'pickup'                            => 'nullable|boolean',
 
             // ===== SOCIAL MEDIA =====
-            'tiktok_link'           => 'nullable|string|max:255',
-            'facebook_link'         => 'nullable|string|max:255',
-            'instagram_link'        => 'nullable|string|max:255',
-            'website_link'          => 'nullable|string|max:255',
+            'tiktok_link'                       => 'nullable|string|max:255',
+            'facebook_link'                     => 'nullable|string|max:255',
+            'instagram_link'                    => 'nullable|string|max:255',
+            'website_link'                      => 'nullable|string|max:255',
 
             // ===== FILES =====
-            'business_permit'                 => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'store_front_photo'               => 'required|image|max:2048',
-            'bir_certificate_of_registration' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'dti_registration'                => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'sec_registration'                => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'sanitary_registration'           => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'business_permit'                   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'store_front_photo'                 => 'required|image|mimes:jpg,jpeg,png|accepted|max:2048',
+            'bir_certificate_of_registration'   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dti_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'sec_registration'                  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'sanitary_registration'             => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
             // ===== PRODUCTS =====
-            'products'              => 'required|array',
-            'products.*'            => 'string|max:255',
-            'additional_product'    => 'nullable|string|max:255',
+            'products'                          => 'required|array',
+            'products.*'                        => 'string|max:255',
+            'additional_product'                => 'nullable|string|max:255',
         ];
     }
 
@@ -103,8 +110,8 @@ class BusinessRegisterRequest extends FormRequest
             'barangay_id.exists'            => 'Selected barangay is invalid.',
 
             // ===== OPERATING HOURS =====
-            'days_of_operation.required'    => 'Days of operation is required.',
-            'days_of_operation.array'       => 'Days of operation must be an array.',
+            'days_open.required'            => 'Days of operation is required.',
+            'days_open.array'               => 'Days of operation must be an array.',
 
             'open_time.required'            => 'Open time is required.',
             'open_time.date_format'         => 'Open time must be in HH:MM format.',
@@ -115,15 +122,18 @@ class BusinessRegisterRequest extends FormRequest
 
             'business_notes.string'         => 'Business notes must be a valid string.',
 
-            // ===== PAYMENT METHODS & SERVICES =====
-            'cash.boolean'                  => 'Cash must be true or false.',
-            'gcash.boolean'                 => 'Gcash must be true or false.',
-            'paymaya.boolean'               => 'Paymaya must be true or false.',
-            'utang_ok.boolean'              => 'Utang_ok must be true or false.',
 
-            'delivery.boolean'              => 'Delivery must be true or false.',
-            'meetup.boolean'                => 'Meetup must be true or false.',
-            'pickup.boolean'                => 'Pickup must be true or false.',
+            // ===== PAYMENT METHODS & SERVICES =====
+            'business_services.required'   => 'Business services are required.',
+            'business_services.array'      => 'Business services must be an array.',
+            'business_services.*.string'   => 'Each business service must be a valid text.',
+            'business_services.*.max'      => 'Each business service must not exceed 255 characters.',
+
+            'payments_accepted.required'   => 'Payment methods are required.',
+            'payments_accepted.array'      => 'Payment methods must be an array.',
+            'payments_accepted.*.string'   => 'Each payment method must be a valid text.',
+            'payments_accepted.*.max'      => 'Each payment method must not exceed 255 characters.',
+
 
             // ===== SOCIAL MEDIA =====
             'tiktok_link.max'               => 'Tiktok link is too long.',
