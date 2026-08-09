@@ -66,6 +66,7 @@ class BusinessRegisterRequest extends FormRequest
             // ===== FILES =====
             'business_permit' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'max:2048',
@@ -73,6 +74,7 @@ class BusinessRegisterRequest extends FormRequest
 
             'store_front_photo' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'image',
                 'mimes:jpg,jpeg,png',
                 'max:2048',
@@ -80,6 +82,7 @@ class BusinessRegisterRequest extends FormRequest
 
             'bir_certificate_of_registration' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'max:2048',
@@ -87,6 +90,7 @@ class BusinessRegisterRequest extends FormRequest
 
             'dti_registration' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'max:2048',
@@ -94,6 +98,7 @@ class BusinessRegisterRequest extends FormRequest
 
             'sec_registration' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'max:2048',
@@ -101,6 +106,7 @@ class BusinessRegisterRequest extends FormRequest
 
             'sanitary_registration' => [
                 Rule::requiredIf(fn () => $this->isMethod('POST')),
+                'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'max:2048',
